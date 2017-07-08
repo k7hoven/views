@@ -14,12 +14,13 @@ def make(callable):
         
 @make
 class gen:
-    """Generator comprehension syntax
+    """Generator comprehension syntax.
 
     Example:
 
-    >>> list(gen[:range(3), 3, 4, :range(5,7), 7)
-    [0, 1, 2, 3, 4, 5, 6]
+    >>> list(gen[::range(3), 3, 4, ::range(5,7), 7])
+    [0, 1, 2, 3, 4, 5, 6, 7]
+
     """
 
     def __getitem__(self, args):
@@ -32,8 +33,8 @@ class gen:
             part = []
             for obj in args:
                 if isinstance(obj, slice):
-                    if obj.start is None and obj.step is None:
-                        obj = obj.stop
+                    if obj.start is None and obj.stop is None:
+                        obj = obj.step
                         objtype = type(obj)
                         if hasattr(objtype, '__iter__'):
                             obj = iter(obj)
@@ -59,10 +60,10 @@ class gen:
                 yield from part
         chain.__qualname__ = '<views.gen>'
 
-        # could have done yield from in __getitem__ directly, but this
-        # gives a better repr for the resulting generator
+        # could have done 'yield from' in __getitem__ directly, but 
+        # this gives a better repr for the resulting generator
 
-        return chain()    
+        return chain()
 
 
 class LengthChangedError(IndexError):
@@ -72,8 +73,24 @@ def issequence(obj):
     otype = type(obj)
     return hasattr(otype, '__getitem__') and hasattr(otype, '__len__')
 
+class Repr(str):
+    def __repr__(self):
+        return self
 
-class Seq:
+class SeqMixin:
+    REPR_ITEMS = 10
+    REPR_SPLIT = 5, 4
+    def __repr__(self):
+        template = f"<sequence view {len(self)}:" " {} >"
+        if len(self) <= self.REPR_ITEMS:
+            return template.format(repr([*self]))
+        return template.format(
+            repr([*self[:self.REPR_SPLIT[0]],
+                  Repr("..."),
+                  *self[-self.REPR_SPLIT[1]:]])
+        )
+
+class Seq(SeqMixin):
     def __init__(self, seq, start=None, stop=None, step=None):
         if not issequence(seq):
             raise TypeError(
@@ -83,7 +100,11 @@ class Seq:
         self._len_orig = len(seq)
         self._slice = slice(*slice(start, stop, step).indices(len(seq)))
         self._len = len(range(self._len_orig)[self._slice])
-        
+
+    @property
+    def deps(self):
+        return self._seq,
+
     def __len__(self):
         return self._len
 
@@ -119,7 +140,7 @@ class Seq:
         return self._seq[self._slice.start + subscript * self._slice.step]
 
 
-class SeqChain:
+class SeqChain(SeqMixin):
     def __init__(self, *parts):
         for p in parts:
             if not issequence(p):
@@ -128,6 +149,10 @@ class SeqChain:
                 )
         self._parts = parts
         self._len = sum(len(p) for p in parts)
+
+    @property
+    def deps(self):
+        return self._parts
     
     def __len__(self):
         return self._len
@@ -147,7 +172,6 @@ class SeqChain:
             )
         return ret
         
-
     def __getitem__(self, subscript):
         if isinstance(subscript, tuple):
             raise TypeError("multi-indices not supperted")
@@ -176,10 +200,14 @@ class seq:
 
     Resulting objects support slicing and indexing.
 
-    Example:
+    Examples:
 
-    >>> list(seq[:range(3), 3, 4, :range(5,7), 7])
-    [0, 1, 2, 3, 4, 5, 6, 7]
+    >>> seq[::range(3), None, ::"abc", "Hi!"]
+    <sequence view 8: [0, 1, 2, None, 'a', 'b', 'c', 'Hi!'] >
+
+    >>> seq[::range(100)]
+    <sequence view 100: [0, 1, 2, 3, 4, ..., 96, 97, 98, 99] >
+
     """
 
     def __getitem__(self, args):
@@ -192,8 +220,8 @@ class seq:
             part = []
             for obj in args:
                 if isinstance(obj, slice):
-                    if obj.start is None and obj.step is None:
-                        obj = obj.stop
+                    if obj.start is None and obj.stop is None:
+                        obj = obj.step
                         if not issequence(obj):
                             raise TypeError(
                                 f"'{type(obj).__name__}' object is not "
