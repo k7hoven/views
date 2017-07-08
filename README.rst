@@ -39,11 +39,12 @@ Sequence view comprehension syntax: resulting objects support slicing and indexi
 Example:
 
 .. code-block:: python
+
    >>> from views import seq
    >>> seq[::range(3), None, ::"abc", "Hi!"]
    <sequence view 8: [0, 1, 2, None, 'a', 'b', 'c', 'Hi!'] >
    >>> seq[::range(100)]
-   <sequence view 100: [0, 1, 2, 3, 4, ..., 96, 97, 98, 99]
+   <sequence view 100: [0, 1, 2, 3, 4, ..., 96, 97, 98, 99] >
 
 
 Generator comprehension syntax.
@@ -51,8 +52,9 @@ Generator comprehension syntax.
 Example:
 
 .. code-block:: python
+
     >>> list(gen[::range(3), 3, 4, ::range(5,7), 7])
-    [0, 1, 2, 3, 4, 5, 6, 7
+    [0, 1, 2, 3, 4, 5, 6, 7]
 
 
 Have fun!
