@@ -1,7 +1,7 @@
 ``views`` -- efficient tools for generators and sequences
 ========================================================
 
-The ``views`` module provides additions to the existing python comprehensions and generator expressions. (Chained) sequence views can be made using ``seq`` and generators can be chained with `gen`, as shown in the examples below.
+The ``views`` module provides additions to the existing python comprehensions and generator expressions. (Chained) sequence views can be made using ``seq`` and generators can be chained with ``gen``, as shown in the examples below.
 
 Any feedback or suggestions are very welcome: koos.zevenhoven@aalto.fi.
 
@@ -20,13 +20,13 @@ The package can be installed with ``pip`` (make sure you have it installed):
 
 .. code-block:: bash
 
-    pip3 install git+http://github.com/k7hoven/coils
+    pip3 install git+http://github.com/k7hoven/views
 
 Or if your default python is Python 3:
 
 .. code-block:: bash
 
-    pip install git+http://github.com/k7hoven/coils
+    pip install git+http://github.com/k7hoven/views
 
 
 Basic Usage
@@ -53,7 +53,8 @@ Example:
 
 .. code-block:: python
 
-    >>> list(gen[::range(3), 3, 4, ::range(5,7), 7])
+    >>> from views import gen
+    >>> list(gen[::range(3), 3, 4, ::range(5,7), 7])
     [0, 1, 2, 3, 4, 5, 6, 7]
 
 
