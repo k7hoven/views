@@ -66,7 +66,7 @@ class gen:
         return chain()
 
 
-class LengthChangedError(IndexError):
+class LengthChangedError(RuntimeError):
     pass
 
 def issequence(obj):

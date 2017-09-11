@@ -22,6 +22,7 @@ setuptools.setup(
     author='Koos Zevenhoven',
     author_email='koos.zevenhoven@aalto.fi',
     packages=setuptools.find_packages(),
+    py_modules=['views'],
     long_description=(README + '\n' + CHANGES),
     license='BSD',
     classifiers=[
