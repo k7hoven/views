@@ -43,8 +43,9 @@ class gen:
                                 f"'{objtype.__name__}' object is not "
                                 "iterable and cannot be chained"
                             )
-                        yield part
-                        part = []
+                        if part:
+                            yield part
+                            part = []
                         yield obj
                     else:
                         raise SyntaxError(
@@ -227,8 +228,9 @@ class seq:
                                 f"'{type(obj).__name__}' object is not "
                                 "a sequence and cannot be chained"
                             )
-                        yield part
-                        part = []
+                        if part:
+                            yield part
+                            part = []
                         yield obj
                     else:
                         raise SyntaxError(
