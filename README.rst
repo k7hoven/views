@@ -1,7 +1,7 @@
 ``views`` -- efficient tools for generators and sequences
 ========================================================
 
-The ``views`` module provides additions to the existing python comprehensions and generator expressions. (Chained) sequence views can be made using ``seq`` and generators can be chained with `gen`, as shown in the examples below.
+The ``views`` module provides additions to the existing python comprehensions and generator expressions. (Chained) sequence views can be made using ``seq`` and generators can be chained with ``gen``, as shown in the examples below.
 
 Any feedback or suggestions are very welcome: koos.zevenhoven@aalto.fi.
 
@@ -11,7 +11,7 @@ Getting Started
 Requirements
 ------------
 
-* Python 3.6
+* Python 3.6+
 
 Installation
 ------------
@@ -34,7 +34,10 @@ Basic Usage
 
 Basic introductory examples here, but they should get you started.
 
-Sequence view comprehension syntax: resulting objects support slicing and indexing.
+Sequence view comprehension syntax
+''''''''''''''''''''''''''''''''''
+
+You can change chain single objects and sequences into one sequence view. Use ``::`` just like you would use ``*`` in tuple (un)packing. The resulting object supports slicing and indexing.
  
 Example:
 
@@ -43,16 +46,19 @@ Example:
    >>> seq[::range(3), None, ::"abc", "Hi!"]
    <sequence view 8: [0, 1, 2, None, 'a', 'b', 'c', 'Hi!'] >
    >>> seq[::range(100)]
-   <sequence view 100: [0, 1, 2, 3, 4, ..., 96, 97, 98, 99]
+   <sequence view 100: [0, 1, 2, 3, 4, ..., 96, 97, 98, 99] >
 
 
-Generator comprehension syntax.
+Generator comprehension syntax
+''''''''''''''''''''''''''''''
+
+Use like ``seq``. The resulting object is a generator.
 
 Example:
 
 .. code-block:: python
     >>> list(gen[::range(3), 3, 4, ::range(5,7), 7])
-    [0, 1, 2, 3, 4, 5, 6, 7
+    [0, 1, 2, 3, 4, 5, 6, 7]
 
 
 Have fun!
