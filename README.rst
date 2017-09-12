@@ -20,13 +20,13 @@ The package can be installed with ``pip`` (make sure you have it installed):
 
 .. code-block:: bash
 
-    pip3 install git+http://github.com/k7hoven/coils
+    pip3 install git+http://github.com/k7hoven/views
 
 Or if your default python is Python 3:
 
 .. code-block:: bash
 
-    pip install git+http://github.com/k7hoven/coils
+    pip install git+http://github.com/k7hoven/views
 
 
 Basic Usage
@@ -42,6 +42,7 @@ You can change chain single objects and sequences into one sequence view. Use ``
 Example:
 
 .. code-block:: python
+
    >>> from views import seq
    >>> seq[::range(3), None, ::"abc", "Hi!"]
    <sequence view 8: [0, 1, 2, None, 'a', 'b', 'c', 'Hi!'] >
@@ -57,7 +58,9 @@ Use like ``seq``. The resulting object is a generator.
 Example:
 
 .. code-block:: python
-    >>> list(gen[::range(3), 3, 4, ::range(5,7), 7])
+
+    >>> from views import gen
+    >>> list(gen[::range(3), 3, 4, ::range(5,7), 7])
     [0, 1, 2, 3, 4, 5, 6, 7]
 
 
