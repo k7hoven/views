@@ -1,5 +1,5 @@
 ``views`` -- efficient tools for generators and sequences
-========================================================
+=========================================================
 
 The ``views`` module provides additions to the existing python comprehensions and generator expressions. (Chained) sequence views can be made using ``seq`` and generators can be chained with ``gen``, as shown in the examples below.
 
