@@ -30,7 +30,7 @@ Or if your default python is Python 3:
 
 
 Basic Usage
-===========
+-----------
 
 Basic introductory examples here, but they should get you started.
 
