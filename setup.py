@@ -16,7 +16,7 @@ with open('requirements.txt') as f:
 
 setuptools.setup(
     name="views",
-    version='0.2',
+    version='0.3',
     description="views",
     url='https://github.com/k7hoven/views',
     author='Koos Zevenhoven',
