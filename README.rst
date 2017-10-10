@@ -3,7 +3,11 @@
 
 The ``views`` module provides additions to the existing python comprehensions and generator expressions. (Chained) sequence views can be made using ``seq`` and generators can be chained with ``gen``, as shown in the examples below.
 
-Any feedback or suggestions are very welcome: koos.zevenhoven@aalto.fi.
+Any feedback or suggestions are very welcome.
+
+- Email: koos.zevenhoven@aalto.fi
+- Twitter: `@k7hoven <https://twitter.com/k7hoven>`_
+
 
 Getting Started
 ===============
@@ -62,6 +66,22 @@ Example:
     >>> from views import gen
     >>> list(gen[::range(3), 3, 4, ::range(5,7), 7])
     [0, 1, 2, 3, 4, 5, 6, 7]
+
+
+Chaining sequences and generators/iterables
+'''''''''''''''''''''''''''''''''''''''''''
+
+You can chain an arbitrary number of sequences with ``seq.chain(*sequences)`` and of generators with ``gen.chain(*iterables)``. The latter is equivalent to ``itertools.chain(*iterables)``.
+
+Example:
+
+.. code-block:: python
+
+   >>> from views import seq, gen
+   >>> seq.chain([1, 2, 3], [4, 5, 6])
+   <sequence view 6: [1, 2, 3, 4, 5, 6] >
+   >>> list(gen.chain([1, 2, 3], [4, 5, 6]))
+   [1, 2, 3, 4, 5, 6]
 
 
 Have fun!

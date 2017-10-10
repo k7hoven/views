@@ -56,15 +56,13 @@ class gen:
             if part:
                 yield part
 
-        def chain():
-            for part in parts:
-                yield from part
-        chain.__qualname__ = '<views.gen>'
-
-        # could have done 'yield from' in __getitem__ directly, but 
-        # this gives a better repr for the resulting generator
-
-        return chain()
+        return self.chain(*parts)
+    
+    @staticmethod
+    def chain(*parts):
+        for part in parts:
+            yield from part
+    chain.__qualname__ = '<views.gen>'
 
 
 class LengthChangedError(RuntimeError):
@@ -143,13 +141,15 @@ class Seq(SeqMixin):
 
 class SeqChain(SeqMixin):
     def __init__(self, *parts):
+        _len = 0
         for p in parts:
             if not issequence(p):
                 raise TypeError(
                     f"'{type(p).__name__}' object is not a sequence"
                 )
+            _len += len(p)
         self._parts = parts
-        self._len = sum(len(p) for p in parts)
+        self._len = _len
 
     @property
     def deps(self):
@@ -242,3 +242,5 @@ class seq:
                 yield part
 
         return SeqChain(*parts)
+
+    chain = staticmethod(SeqChain)
