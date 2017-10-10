@@ -11,9 +11,6 @@ with open('README.rst') as f:
 with open('CHANGES.rst') as f:
     CHANGES = f.read()
     
-with open('requirements.txt') as f:
-    REQUIREMENTS = f.readlines()
-
 setuptools.setup(
     name="views",
     version='0.3',
@@ -31,7 +28,5 @@ setuptools.setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
     ],
-
-    install_requires = REQUIREMENTS,
 )
 
