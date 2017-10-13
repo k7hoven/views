@@ -244,3 +244,128 @@ class seq:
         return SeqChain(*parts)
 
     chain = staticmethod(SeqChain)
+
+_range = range
+
+class range:
+    def __new__(cls, *args, **kwargs):
+        if ... not in args:
+            return cls._from_std_range(_range(*args, **kwargs))
+        
+        start = args[0]
+        ind = args.index(...)
+        if ind == 1:
+            if len(args) != 3:
+                if len(args) > 3:
+                    raise TypeError(
+                        "too many arguments to " 
+                        "range(first, ..., last [, step=step])"
+                    )
+                elif len(args) < 3:
+                    raise TypeError(
+                        "missing last value for "
+                        "range(first, ..., last[, step=step])"
+                    )
+            step = kwargs.pop('step', 1)
+            last = args[2]
+        elif ind == 2:
+            if len(args) != 4:
+                if len(args) > 4:
+                    raise TypeError(
+                        "too many arguments to "
+                        "range(first, second, ..., last)"
+                    )
+                elif len(args) < 4:
+                    raise TypeError(
+                        "missing last value for "
+                        "range(first, second, ..., last)"
+                    )
+            step = args[1] - start
+            last = args[3]
+
+            if 'step' in kwargs:
+                if kwargs['step'] == step:
+                    raise TypeError("redundant 'step' argument")
+                else:
+                    raise TypeError("conflicting 'step' argument")
+        elif ind == 0:
+            raise TypeError("missing first value for range(first, ..., last)")
+        elif ind > 2:
+            raise TypeError("misplaced ellipsis (...)")
+        else:
+            assert False  # Should never get here
+
+        if step > 0:
+            stop = last + 1
+            if stop < start:
+                raise ValueError(
+                    "expected negative step for {}, ..., {}"
+                        .format(start, last)
+                )
+                
+        else:
+            stop = last - 1
+            if stop > start:
+                raise ValueError(
+                    "expected positive step for {}, ..., {}"
+                        .format(start, last)
+                )
+
+        if kwargs:
+            raise TypeError(
+                "unexpected keyword argument(s): {}"\
+                    .format(", ".join(kwargs.keys()))
+            )
+
+        return cls._from_std_range(_range(start, stop, step))
+
+    @classmethod
+    def _from_std_range(cls, rng):
+        new = object.__new__(cls)
+        new._range = rng
+        return new
+
+    def __repr__(self):
+        template = "range({}, ..., {}{})" 
+        if self._range.step == 1:
+            stepstr = ""
+        else:
+            stepstr = ", step={}".format(self._range.step)
+        try:
+            return template.format(self[0], self[-1], stepstr)
+        except IndexError:
+            return repr(self._range)
+
+    @property
+    def start(self):
+        return self._range.start
+    
+    @property
+    def stop(self):
+        return self._range.stop
+
+    @property
+    def step(self):
+        return self._range.step
+
+from types import MethodType as _MethodType
+import functools as _functools
+
+def _inject_range_methods():
+    _dont_copy = ['__getattribute__', '__init__'] + list(vars(range))
+    
+    def make_range_method(function):
+        @_functools.wraps(function)
+        def method(self, *args, **kwargs):
+            ret = function(self._range, *args, **kwargs)
+            if type(ret) is _range:
+                return range._from_std_range(ret)
+            return ret
+    
+        return method
+    
+    for name, function in vars(_range).items():
+        if hasattr(function, '__call__') and name not in _dont_copy:
+            setattr(range, name, make_range_method(function))
+
+_inject_range_methods()

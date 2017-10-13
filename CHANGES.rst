@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.4.0 (2017)
+------------
+
+- Add enhanced range with standard ``range`` functionality and extras: ``range(first, ..., last)``, ``range(first, second, ..., last)`` and ``range(first, ..., last, step=step)``. The ``repr`` is always given using ``...``. 
+
+
 0.3.0 (2017-10-10)
 ------------------
 
